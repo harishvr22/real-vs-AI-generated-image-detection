@@ -1,0 +1,15 @@
+# Python virtual environments
+venv/
+deepfake_env/
+
+# Datasets
+dataset/
+
+# Cache / temp
+__pycache__/
+*.pyc
+
+# OS / IDE files
+.DS_Store
+.idea/
+.vscode/
