@@ -131,3 +131,21 @@ img{max-width:100%;display:block}
   .floaty, .btn-hero::before, .progress__bar.animated, body::before { animation: none !important }
   .btn-hero:hover{transform:none}
 }
+/* Position the History button at the top-right */
+.history-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 10;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.1rem;
+}
+
+@media (max-width: 640px) {
+  .history-btn {
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.9rem;
+  }
+}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History | AI vs Real Image Detector</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .history-container {
+      width: 95%;
+      margin: 5rem auto 2rem auto;
+      padding: 2rem;
+      background: hsl(var(--card) / .8);
+      border: 1px solid hsl(var(--border));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-1);
+      backdrop-filter: blur(10px) saturate(140%);
+      text-align: center;
+    }
+
+    .history-container h1 {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .history-container p {
+      color: hsl(var(--muted));
+      margin-bottom: 2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      box-shadow: var(--shadow-1);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid hsl(var(--border));
+      padding: 1rem;
+      text-align: center;
+    }
+
+    th {
+      background: var(--gradient);
+      color: white;
+      font-weight: 600;
+    }
+
+    tr:nth-child(even) {
+      background: hsl(var(--bg) / 0.6);
+    }
+
+    tr:hover {
+      background: hsl(var(--accent) / 0.15);
+      transition: var(--transition);
+    }
+
+    .btn-back {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      background: var(--gradient);
+      color: hsl(var(--primary-contrast));
+      border: none;
+      border-radius: 10px;
+      padding: 0.6rem 1.2rem;
+      font-weight: 600;
+      box-shadow: var(--shadow-2);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-back:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+
+    @media (max-width: 640px) {
+      .btn-back {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      table {
+        font-size: 0.85rem;
+      }
+
+      th, td {
+        padding: 0.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <button class="btn-back" onclick="window.location.href='index.html'">← Back</button>
+
+  <div class="history-container">
+    <h1>Detection History</h1>
+    <p>Review your previous AI vs Real image detection results below.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Roll Number</th>
+          <th>Image Name</th>
+          <th>Accuracy</th>
+          <th>Result</th>
+          <th>Date & Time</th>
+        </tr>
+      </thead>
+      <tbody id="history-table">
+        <tr><td colspan="5">Loading...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Fetch history data from Flask backend
+    fetch("http://127.0.0.1:5000/api/history")
+      .then(response => response.json())
+      .then(data => {
+        const table = document.getElementById("history-table");
+        table.innerHTML = "";
+
+        if (data.length === 0) {
+          table.innerHTML = "<tr><td colspan='5'>No past activity found</td></tr>";
+        } else {
+          data.forEach(item => {
+            const row = `
+              <tr>
+                <td>${item.roll_number}</td>
+                <td>${item.image_name}</td>
+                <td>${item.confidence.toFixed(2)}%</td>
+                <td style="color:${item.label === 'real' ? 'green' : 'red'};font-weight:600">
+                  ${item.label.charAt(0).toUpperCase() + item.label.slice(1)}
+                </td>
+                <td>${item.timestamp}</td>
+              </tr>
+            `;
+            table.innerHTML += row;
+          });
+        }
+      })
+      .catch(err => {
+        console.error("Error fetching history:", err);
+        document.getElementById("history-table").innerHTML =
+          "<tr><td colspan='5'>Error loading history</td></tr>";
+      });
+  </script>
+</body>
+</html>
