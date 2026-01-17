@@ -1,62 +1,78 @@
   # Deepfake vs Real Image Detection - Fullstack Project
 
-This project includes a **frontend** (static HTML/CSS/JS) and a **backend** (Flask + Keras) to detect whether an uploaded image is real or AI-generated.
+# Real vs AI Image Detection
 
-## Structure
-```
-deepfake_project/
-  frontend/            # your UI (index.html, index.js, style.css)
-  backend/
-    train.py           # train model on dataset/ (will save to backend/saved_model/model.h5)
-    app.py             # Flask API - serve frontend and /api/predict endpoint
-    predict_cli.py     # simple CLI to test model locally
-    saved_model/       # (produced after training) model.h5 and classes.json
-    requirements.txt
-  dataset/             # put your dataset here (folders: real/, fake/)
-```
+## Overview
+This project implements a deep learning–based image classification system to identify whether an input image is real or AI-generated. The solution addresses the growing challenge of synthetic image misuse by applying a Convolutional Neural Network trained on labeled data.
 
-## Quick start (recommended: use a short path like C:\\tf_project or D:\\tf_env to avoid Windows long-path issues)
+The model is designed for binary classification and can be reused or extended for research, academic, or early-stage production use cases.
 
-1. Create & activate a Python virtual environment (recommended):
+---
+
+## Key Features
+- Binary image classification: Real vs AI-generated
+- CNN-based architecture using ResNet18
+- Standardized image preprocessing pipeline
+- Model evaluation using industry-recognized metrics
+- Reusable trained model checkpoint
+
+---
+
+## Technical Stack
+- Language: Python  
+- Framework: PyTorch  
+- Model: ResNet18 (CNN)  
+- Dataset: KaggleHub (`saurabhbagchi/deepfake-image-detection`)  
+- Input Size: 128 × 128  
+- Environment: Visual Studio Code  
+
+---
+
+## Architecture Summary
+1. Load and label image dataset
+2. Resize and normalize input images
+3. Train CNN model on training set
+4. Evaluate model using test set
+5. Predict class for unseen images
+
+---
+
+## Dataset
+- Source: KaggleHub
+- Classes:
+  - Real
+  - AI-generated
+- Preprocessing:
+  - Resize to 128 × 128
+  - Normalize pixel values
+  - Train–test split
+
+---
+
+## Project Structure
+Real-vs-AI-Image-Detection/
+├── dataset/
+│ ├── real/
+│ └── ai/
+├── model/
+│ └── ai_vs_real_model.pth
+├── train.py
+├── test.py
+├── predict.py
+├── requirements.txt
+└── README.md
+
+---
+
+## Setup Instructions
+
+### Prerequisites
+- Python 3.8+
+- pip
+
+### Installation
 ```bash
-python -m venv venv
-# Windows
-venv\\Scripts\\activate
-# Linux / macOS
-source venv/bin/activate
-```
+git clone https://github.com/harishvr22/Real-vs-AI-Image-Detection.git
+cd Real-vs-AI-Image-Detection
+pip install -r requirements.txt
 
-2. Install requirements:
-```bash
-pip install -r backend/requirements.txt
-```
-
-3. Prepare your dataset:
-Place your dataset in the `dataset/` folder with the following structure:
-```
-dataset/
-  real/
-    img1.jpg
-    ...
-  fake/
-    img1.jpg
-    ...
-```
-
-4. Train the model (this will save the best model to `backend/saved_model/model.h5`):
-```bash
-python backend/train.py
-```
-
-5. Run the backend server:
-```bash
-python backend/app.py
-```
-
-6. Open the frontend:
-Visit `http://127.0.0.1:5000/` in your browser, upload an image and click Predict.
-
-## Notes and tips
-- If TensorFlow installation on Windows fails due to long path errors, either enable long paths in Windows or use Google Colab (recommended) to train the model and then copy `model.h5` to `backend/saved_model/`.
-- For faster inference/training you can switch to a GPU environment (Colab or local CUDA-enabled setup).
-- The frontend expects the endpoint `/api/predict`. If you host the backend elsewhere, update `PREDICT_ENDPOINT` in `frontend/index.js`.
